@@ -1,0 +1,9 @@
+Task4*
+.vs
+*.7z
+GameSFML.vcxproj.user
+GameSFML.vcxproj
+GameSFML.vcxproj.filters
+Debug/*
+*.o
+*Debug*

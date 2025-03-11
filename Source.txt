@@ -1,0 +1,130 @@
+
+#include <SFML/Graphics.hpp>
+#include <iostream>
+using namespace std;
+using namespace sf;
+
+const int ts = 64;
+const int gridSize = 8;
+
+int grid[gridSize][gridSize];
+Texture jewelTextures[3];
+
+
+void openGameWindow() {
+    RenderWindow gameWindow(VideoMode(800, 600), "Game Window");
+
+    Texture backgroundTexture, tableTexture;
+    backgroundTexture.loadFromFile("MainPage.jfif");
+    tableTexture.loadFromFile("table.png");
+    jewelTextures[0].loadFromFile("jewel_0.png");
+    jewelTextures[1].loadFromFile("jewel_1.png");
+    jewelTextures[2].loadFromFile("jewel_2.png");
+
+    Sprite backgroundSprite(backgroundTexture), tableSprite(tableTexture);
+
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            grid[i][j] = rand() % 3;
+        }
+    }
+
+    float scale = 1.2;
+    backgroundSprite.setScale(scale, scale);
+    tableSprite.setPosition(400, 50);
+    tableSprite.setScale(1.5 * scale, 1.5 * scale);
+
+    while (gameWindow.isOpen()) {
+        Event gameEvent;
+        while (gameWindow.pollEvent(gameEvent)) {
+            if (gameEvent.type == Event::Closed)
+                gameWindow.close();
+        }
+
+
+        // Clear and draw contents of the game window here
+        gameWindow.display();
+        gameWindow.draw(backgroundSprite);
+        gameWindow.draw(tableSprite);
+    }
+}
+
+void drawJewels(RenderWindow& window) {
+    // Draw the jewels on the grid
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            Sprite jewelSprite(jewelTextures[grid[i][j]]);
+            jewelSprite.setPosition(j * ts, i * ts);
+            jewelSprite.setScale(0.5, 0.5); // Adjust the scale for smaller size
+            window.draw(jewelSprite);
+        }
+    }
+}
+int main() {
+    RenderWindow window(VideoMode(800, 560), " <Game> ");
+    // First Page For Menu or Intro .
+    Texture backgroundTexture;
+    backgroundTexture.loadFromFile("Bejeweled.jfif");
+
+    Sprite backgroundSprite(backgroundTexture);
+    float scale = 1.2;
+    backgroundSprite.setScale(scale, scale);
+
+    Font headingFont;
+    headingFont.loadFromFile("headingFont.ttf");
+    Text headingText(" BEJEWLED ", headingFont, 100);
+    headingText.setPosition(250, 0);
+    Color headingColor(Color::Black);
+    headingText.setFillColor(headingColor);
+
+    Font subheadingFont;
+    subheadingFont.loadFromFile("subheadingFont.ttf");
+
+    Text playText("--> Play", subheadingFont, 50);
+    playText.setPosition(350, 200);
+    playText.setFillColor(Color::Black); // Adjust color if needed
+
+    Text signText("   'Press 'P''", subheadingFont, 45);
+    signText.setPosition(350, 250);
+    signText.setFillColor(Color::White); // Adjust color if needed
+
+    Text exitText("--> Exit", subheadingFont, 50);
+    exitText.setPosition(350, 300);
+    exitText.setFillColor(Color::Black); // Adjust color if needed
+
+    Text exitsignText("   'Press 'E''", subheadingFont, 45);
+    exitsignText.setPosition(350, 350);
+    exitsignText.setFillColor(Color::White); // Adjust color if needed
+
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed)
+                window.close();
+            else if (event.type == Event::KeyPressed) {
+                // Check for key presses
+                if (event.key.code == Keyboard::P) {
+                    cout << "Hi. Welcome to the Game: ";
+                    openGameWindow();
+                }
+                else if (event.key.code == Keyboard::E) {
+                    // Handle the "Exit" action
+                    window.close();
+                }
+            }
+        }
+
+        // Display
+        window.clear();
+
+        window.draw(backgroundSprite);
+        window.draw(headingText);
+        window.draw(playText);
+        window.draw(signText);
+        window.draw(exitText);
+        window.draw(exitsignText);
+        window.display();
+    }
+
+    return 0;
+}
